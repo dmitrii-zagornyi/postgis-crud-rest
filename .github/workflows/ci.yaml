@@ -32,5 +32,12 @@ jobs:
       - name: checkout-repo
         uses: actions/checkout@v2
 
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+
+      - name: install conda packages
+        run: install -c conda-forge postgis 
+
       - name: test-db
-        run : psql -h 127.0.0.1 -p 5432 -U postgres
+        run : python testdb.py
