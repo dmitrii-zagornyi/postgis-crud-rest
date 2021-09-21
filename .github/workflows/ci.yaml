@@ -37,7 +37,7 @@ jobs:
           auto-update-conda: true
 
       - name: install conda packages
-        run: install -c conda-forge postgis 
+        run: conda install -c conda-forge postgis 
 
       - name: test-db
         run : python testdb.py
