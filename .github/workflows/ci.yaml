@@ -43,8 +43,10 @@ jobs:
 
       - name: conda packages
         run: conda list
-        run: conda info
-        run: python -v
+
+      - run: conda info
+
+      - run: python -v
 
 
       - name: test-db
