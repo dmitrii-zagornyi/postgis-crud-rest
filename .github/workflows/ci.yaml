@@ -36,6 +36,7 @@ jobs:
         with:
           auto-update-conda: true
           auto-activate-base: true
+          activate-environment: ""
 
       - name: install conda packages
         run: conda install -c conda-forge geoalchemy2 psycopg2
@@ -45,5 +46,3 @@ jobs:
 
       - name: test-db
         run : python testdb.py
-
-      - run: python -v
