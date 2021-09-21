@@ -48,4 +48,4 @@ jobs:
       - run: conda info
 
       - name: test-db
-        run : conda activate base && python testdb.py
+        run : python testdb.py
