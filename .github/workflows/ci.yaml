@@ -12,6 +12,9 @@ on:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
     permissions:
       contents: read
       packages: write
