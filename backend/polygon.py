@@ -23,19 +23,19 @@ class GisPolygon(Base):
     props = Column(JSON())
     geom = Column(Geometry('POLYGON', dbSrid))
     PrimaryKeyConstraint(id, name=f'{__tablename__}_pkey')
-    
+
     def __init__(self, class_id=None, name=None, props=None, geom=None):
         self.class_id = class_id
         self.name = name
         self.props = props
         self.geom = geom
-        
+
         self._srid = dbSrid
         return
-    
+
     def _getSridTransform(self, srid):
         return self._srid
-    
+
     def __getitem__(self, key):
         value = getattr(self, self.__table__.columns[key])
         if (key == 'geom'):
@@ -43,7 +43,7 @@ class GisPolygon(Base):
                 value = geoFunctions.ST_Transform(value, self._srid)
             value = geoFunctions.ST_AsText(value)
         return
-    
+
     def __setitem__(self, key, value):
         if (key == 'geom'):
             value = geoFunctions.ST_GeomFromText(value)
@@ -51,10 +51,10 @@ class GisPolygon(Base):
                 value = geoFunctions.ST_Transform(value, self._srid)
         setattr(self, self.__table__.columns[key], value)
         return
-    
+
     def getSrid(self):
         return self._srid
-    
+
     def setSrid(self, srid):
-        self._srid = srid        
+        self._srid = srid
         return
