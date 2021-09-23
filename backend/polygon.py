@@ -64,18 +64,18 @@ class Polygon(Base):
                 project = pyproj.Transformer.from_crs(myCrs, dbCrs, always_xy=True).transform
                 value = transform(project, value)
         setattr(self, key, value)
-
         return
+
+    def getSrid():
+        return dbSrid
 
     def update(self, data, srid=dbSrid):
         for key, value in data.items():
             self._setItem(key, value, srid)
-
         return
 
     def read(self, srid=dbSrid):
         data = {}
         for column in self.__table__.columns:
             data[column.name] = self._getItem(column.name, srid)
-
         return data
