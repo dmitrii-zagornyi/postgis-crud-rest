@@ -1,9 +1,9 @@
 # postgis-crud-rest
 Implemented features:
-1. База данных для хранения полигонов
-2. API для доступа к базе данных
-3. Поддержка различных проекций
-4. REST API для доступа к базе данных
+1. PostGIS database for storing Polygons
+2. Python API for DB access
+3. Supporting various SRID
+4. Python API for DB access
 
 Continous Integration:
-Система построена на Github Actions(https://github.com/dmitrii-zagornyi/postgis-crud-rest/actions). Триггер установлен на коммиты и пул реквесты в develop бранч. Для тестирования базы данных поднимается докер контейнер с PostGIS. Тестами покрыт не весь код, т.к. это требует дополнительного времени. Пакеты питона, необходимые для запуска, скачиваются и разворачиваются с помощью miniconda. Для тестирования REST API есть прототип - в отдельном процессе поднимается сервер и тесты отсылают на него запросы. Скорее всего во flask есть встроенные фичи для тестирования, но это требует более близкого знакомства с фреймвёрком.
+As a CI is used Github Actions (https://github.com/dmitrii-zagornyi/postgis-crud-rest/actions). Builds are triggered on commits and PRs to develop branch. For DB testing stared docker container with PostGIS database. Python environment with required packages created by miniconda. Test coverage not 100% of cases - this required more additional time. For REST API testing is started web service in separate process and is used python requests module. Flask have support of unittests, but this implementation require additional time for Flask investigation.
