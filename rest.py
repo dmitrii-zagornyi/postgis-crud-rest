@@ -13,11 +13,10 @@ api = Api(app)
 
 @app.route('/api/create_polygon', methods=['POST'])
 def createPolygon():
-    print(request)
     if request.form:
         try:
             backendApi = BackendApi(ConnectionString)
-            backendApi.createPolygon(request.form)
+            backendApi.createPolygon(json.dumps(request.form))
             response = make_response(jsonify({'status': 'Created'}), 201)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
@@ -37,13 +36,13 @@ def deletePolygon(id):
     return response
 
 
-@app.route('/api/update_polygon/<int:id>', methods=['PUT'])
-def updatePolygon(id):
-    if request.data:
+@app.route('/api/update_polygon', methods=['POST'])
+def updatePolygon():
+    if request.form:
         try:
             backendApi = BackendApi(ConnectionString)
-            backendApi.updatePolygon(request.data)
-            response = make_response(jsonify({'status': 'Created'}), 201)
+            backendApi.updatePolygon(json.dumps(request.form))
+            response = make_response(jsonify({'status': 'Updated'}), 201)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
     else:
