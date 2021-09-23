@@ -44,7 +44,6 @@ class BackendApi(metaclass=Singleton):
         data, srid = BackendApi.jsonToData(jsonData)
         assert 'id' in data
 
-        # ToDo: implement id error checking
         with self._session.begin() as session:
             polygon = session.query(Polygon).filter_by(id=data['id']).first()
             polygon.update(data, srid)
@@ -54,7 +53,6 @@ class BackendApi(metaclass=Singleton):
         data, _ = BackendApi.jsonToData(jsonData)
         assert 'id' in data
 
-        # ToDo: implement id error checking
         with self._session.begin() as session:
             polygon = session.query(Polygon).filter_by(id=data['id']).first()
             session.delete(polygon)

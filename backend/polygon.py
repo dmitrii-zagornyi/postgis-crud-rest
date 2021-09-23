@@ -49,6 +49,7 @@ class Polygon(Base):
                     myCrs = pyproj.CRS(f'EPSG:{srid}')
                     project = pyproj.Transformer.from_crs(dbCrs, myCrs, always_xy=True).transform
                     value = transform(project, value)
+                value = to_shape(value)
         return str(value)
 
     def _setItem(self, key, value, srid):
@@ -57,7 +58,7 @@ class Polygon(Base):
         assert srid is not None
 
         if (key == 'geom'):
-            value = WKTElement(value)
+            value = WKTElement(value, dbSrid)
             if (srid != dbSrid):
                 myCrs = pyproj.CRS(f'EPSG:{srid}')
                 dbCrs = pyproj.CRS(f'EPSG:{dbSrid}')
