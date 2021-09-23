@@ -27,14 +27,14 @@ jobs:
         env:
           # must specify password for PG Docker container image, see: https://registry.hub.docker.com/_/postgres?tab=description&page=1&name=10
           POSTGRES_PASSWORD: qazwsx
-          POSTGRES_DB: test
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: checkout-repo
+      - name: Checkout-repo
         uses: actions/checkout@v2
 
       - uses: conda-incubator/setup-miniconda@v2
@@ -43,11 +43,11 @@ jobs:
           auto-activate-base: true
           activate-environment: ""
 
-      - name: install conda packages
+      - name: Install conda packages
         run: conda install -c conda-forge flask-restful geoalchemy2 nose psycopg2 pyproj shapely
 
       - run: conda list
       - run: conda info
 
-      - name: nosetests
+      - name: Nosetests
         run : nosetests -vv
