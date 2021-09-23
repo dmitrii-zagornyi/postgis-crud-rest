@@ -2,7 +2,7 @@ import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from polygon import Polygon
+from backend.polygon import Polygon
 
 
 class Singleton(type):
@@ -17,7 +17,7 @@ class Singleton(type):
 connectionString = "postgresql://postgres:qazwsx@localhost:5432/postgres"
 
 
-class BackendApi(metaclass=Singleton):
+class Api(metaclass=Singleton):
     def __init__(self, connectionString):
         self._engine = create_engine(connectionString, echo=True)
         self._session = sessionmaker(self._engine)
@@ -33,7 +33,7 @@ class BackendApi(metaclass=Singleton):
         return data, srid
 
     def createPolygon(self, jsonData):
-        data, srid = BackendApi.jsonToData(jsonData)
+        data, srid = Api.jsonToData(jsonData)
 
         with self._session.begin() as session:
             polygon = Polygon(data, srid)
@@ -41,7 +41,7 @@ class BackendApi(metaclass=Singleton):
         return
 
     def updatePolygon(self, jsonData):
-        data, srid = BackendApi.jsonToData(jsonData)
+        data, srid = Api.jsonToData(jsonData)
         assert 'id' in data
 
         with self._session.begin() as session:
@@ -50,7 +50,7 @@ class BackendApi(metaclass=Singleton):
         return
 
     def deletePolygon(self, jsonData):
-        data, _ = BackendApi.jsonToData(jsonData)
+        data, _ = Api.jsonToData(jsonData)
         assert 'id' in data
 
         with self._session.begin() as session:
@@ -60,7 +60,7 @@ class BackendApi(metaclass=Singleton):
 
     def getPolygons(self, jsonData=None):
         if jsonData is not None:
-            _, srid = BackendApi.jsonToData(jsonData)
+            _, srid = Api.jsonToData(jsonData)
         else:
             srid = Polygon.getSrid()
 

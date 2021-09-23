@@ -1,3 +1,4 @@
+import pyproj
 from geoalchemy2 import functions as geoFunctions
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
@@ -7,7 +8,6 @@ from sqlalchemy import Column, DateTime, JSON, Integer, PrimaryKeyConstraint, Se
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import functions as sqlFunctions
 
-import pyproj
 
 Base = declarative_base()
 dbSrid = 4326
