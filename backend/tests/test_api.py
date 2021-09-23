@@ -15,8 +15,8 @@ if connectionString is None:
 
 
 class test_api():
-    sgPolygonPoints = [[0,0],[0,1],[1,1],[1,0],[0,0]]
-  
+    sgPolygonPoints = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]
+
     def setup(self):
         pass
 

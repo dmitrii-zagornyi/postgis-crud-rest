@@ -4,7 +4,7 @@ from polygon import Polygon
 
 
 class test_polygon():
-    sgPolygonPoints = [[0,0],[0,1],[1,1],[1,0],[0,0]]
+    sgPolygonPoints = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]
 
     def test_creation_empty(self):
         data = {}
