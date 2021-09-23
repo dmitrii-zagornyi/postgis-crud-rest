@@ -5,7 +5,6 @@ import json
 
 from backend.api import Api as BackendApi
 from backend.api import connectionString as ConnectionString
-import backend.rest as Rest
 
 
 app = Flask(__name__)
