@@ -1,0 +1,42 @@
+{% set version = "1.0.0" %}
+{% set buildnumber = 0 %}
+
+package:
+    name: postgis-crud-rest
+    version: {{ version }}
+
+source:
+    path: ..
+
+build:
+    number: {{ buildnumber }}
+
+requirements:
+    run:
+      - python >=3
+      - flask-restful
+      - geoalchemy2
+      - psycopg2
+      - pyproj
+      - shapely
+      - sqlalchemy
+
+test:
+    requires:
+      - nose
+      - requests
+    commands:
+      - nosetests -v --exe tests
+    source_files:
+      - tests
+
+about:
+    home: https://github.com/dmitrii-zagornyi/postgis-crud-rest
+    license: GNU General Public License v3.0
+    license_file: LICENSE
+    license_family: GPL3
+    summary: PostGIS CRUD REST
+
+extra:
+  recipe-maintainers:
+     - dmitrii-zagornyi

@@ -7,7 +7,7 @@ import requests
 
 class test_rest():
     def setup(self):
-        self.flaskServer = subprocess.Popen(['python', 'rest.py'])
+        self.flaskServer = subprocess.Popen(['python', os.path.join('backend', 'rest.py')])
         time.sleep(2)
 
     def teardown(self):
