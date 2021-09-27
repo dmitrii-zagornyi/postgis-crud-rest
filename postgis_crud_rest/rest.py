@@ -16,7 +16,7 @@ def createPolygon():
     if request.form:
         try:
             backendApi = BackendApi(ConnectionString)
-            backendApi.createPolygon(json.dumps(request.form))
+            backendApi.createOrUpdatePolygon(json.dumps(request.form))
             response = make_response(jsonify({'status': 'Created'}), 201)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
@@ -41,7 +41,7 @@ def updatePolygon():
     if request.form:
         try:
             backendApi = BackendApi(ConnectionString)
-            backendApi.updatePolygon(json.dumps(request.form))
+            backendApi.createOrUpdatePolygon(json.dumps(request.form))
             response = make_response(jsonify({'status': 'Updated'}), 201)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)

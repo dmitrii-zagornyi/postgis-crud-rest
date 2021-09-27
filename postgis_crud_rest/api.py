@@ -32,21 +32,20 @@ class Api(metaclass=Singleton):
             srid = Polygon.getSrid()
         return data, srid
 
-    def createPolygon(self, jsonData):
+    def createOrUpdatePolygon(self, jsonData):
         data, srid = Api.jsonToData(jsonData)
 
         with self._session.begin() as session:
-            polygon = Polygon(data, srid)
-            session.add(polygon)
-        return
+            polygon = None
+            if 'id' in data:
+                polygon = session.query(Polygon).filter_by(id=data['id']).first()
 
-    def updatePolygon(self, jsonData):
-        data, srid = Api.jsonToData(jsonData)
-        assert 'id' in data
+            if polygon is None:
+                polygon = Polygon(data, srid)
+                session.add(polygon)
+            else:
+                polygon.update(data, srid)
 
-        with self._session.begin() as session:
-            polygon = session.query(Polygon).filter_by(id=data['id']).first()
-            polygon.update(data, srid)
         return
 
     def deletePolygon(self, jsonData):
@@ -70,3 +69,10 @@ class Api(metaclass=Singleton):
                 polygonsData.append(polygon.read(srid))
 
         return json.dumps(polygonsData)
+
+    def deleteAllPolygons(self):
+        with self._session.begin() as session:
+            session.query(Polygon).delete()
+
+        return
+
