@@ -3,8 +3,8 @@ from flask import jsonify, make_response, request
 from flask_restful import Resource, Api
 import json
 
-from backend.api import Api as BackendApi
-from backend.api import connectionString as ConnectionString
+from postgis_crud_rest.api import Api as BackendApi
+from postgis_crud_rest.api import connectionString as ConnectionString
 
 
 app = Flask(__name__)

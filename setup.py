@@ -4,7 +4,7 @@ import re
 import setuptools
 
 
-with io.open('backend/__init__.py', 'rt', encoding='utf8') as file:
+with io.open('postgis_crud_rest/__init__.py', 'rt', encoding='utf8') as file:
     VERSION = re.search(r'__version__ = \'(.*?)\'', file.read()).group(1)
 
 
@@ -41,7 +41,7 @@ def setup_package():
         python_requires='>=3.7',
         setup_requires=['setuptools'],
         install_requires=[],
-        packages=['backend'],
+        packages=['postgis_crud_rest'],
         ext_modules=None
     )
     setup(**metadata)

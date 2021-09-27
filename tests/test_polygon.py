@@ -1,7 +1,7 @@
 from shapely.geometry import Polygon as sgPolygon
 from nose.tools import assert_equals, nottest
 
-from backend.polygon import Polygon
+from postgis_crud_rest.polygon import Polygon
 
 
 class test_polygon():
