@@ -2,21 +2,21 @@ from flask import Flask
 from flask import jsonify, make_response, request
 from flask_restful import Resource, Api
 import json
+import sys
 
 from postgis_crud_rest.api import Api as BackendApi
-from postgis_crud_rest.api import connectionString as ConnectionString
 
 
 app = Flask(__name__)
 api = Api(app)
 
 
-@app.route('/api/create_polygon', methods=['POST'])
+@app.route('/api/create_or_update_polygon', methods=['POST'])
 def createPolygon():
     if request.form:
         try:
-            backendApi = BackendApi(ConnectionString)
             backendApi.createOrUpdatePolygon(json.dumps(request.form))
+
             response = make_response(jsonify({'status': 'Created'}), 201)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
@@ -28,7 +28,6 @@ def createPolygon():
 @app.route('/api/delete_polygon/<int:id>', methods=['DELETE'])
 def deletePolygon(id):
     try:
-        backendApi = BackendApi(ConnectionString)
         backendApi.deletePolygon(json.dumps({'id': id}))
         response = make_response(jsonify({'status': 'Deleted'}), 200)
     except Exception as e:
@@ -40,7 +39,6 @@ def deletePolygon(id):
 def updatePolygon():
     if request.form:
         try:
-            backendApi = BackendApi(ConnectionString)
             backendApi.createOrUpdatePolygon(json.dumps(request.form))
             response = make_response(jsonify({'status': 'Updated'}), 201)
         except Exception as e:
@@ -53,7 +51,6 @@ def updatePolygon():
 @app.route('/api/get_polygons', methods=['GET'])
 def getPolygons():
     try:
-        backendApi = BackendApi(ConnectionString)
         responseData = backendApi.getPolygons()
         response = make_response(responseData, 200)
     except Exception as e:
@@ -62,4 +59,8 @@ def getPolygons():
 
 
 if __name__ == '__main__':
+    connectionString = sys.argv[1]
+    assert connectionString is not None
+
+    backendApi = BackendApi(connectionString)
     app.run(debug=True)

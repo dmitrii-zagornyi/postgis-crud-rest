@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from postgis_crud_rest.api import Api as BackendApi
 from postgis_crud_rest.api import Singleton
+from postgis_crud_rest.api import Status
 from postgis_crud_rest.polygon import Polygon
 
 
@@ -21,7 +22,7 @@ class test_api():
         backendApi = BackendApi(connectionString)
         backendApi.deleteAllPolygons()
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 0)
+        assert len(data) == 0
 
     def teardown(self):
         backendApi = BackendApi(connectionString)
@@ -29,95 +30,104 @@ class test_api():
         del backendApi
         Singleton._instances.clear()
 
-    def test_backendapi_init(self):
+    def test_api_init(self):
         backendApi = BackendApi(connectionString)
         print(backendApi.getPolygons())
 
-    def test_backendapi_createOnePolygon(self):
+    def test_api_create_one_polygon(self):
         backendApi = BackendApi(connectionString)
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        assert status == Status.Created, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
 
-    def test_backendapi_createTowPolygons(self):
+    def test_api_create_two_polygons(self):
         backendApi = BackendApi(connectionString)
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        assert status == Status.Created, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test1'}))
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test1'}))
+        assert status == Status.Created, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 2)
-        assert(data[0]['name'] == 'test0')
-        assert(data[1]['name'] == 'test1')
+        assert len(data) == 2
+        assert data[0]['name'] == 'test0'
+        assert data[1]['name'] == 'test1'
 
-    def test_backendapi_UpdatePolygon(self):
+    def test_api_update_polygon(self):
         backendApi = BackendApi(connectionString)
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'id': 1}))
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'id': 1}))
+        assert status == Status.Created, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test1', 'id': 1}))
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test1', 'id': 1}))
+        assert status == Status.Updated, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test1')
+        assert len(data) == 1
+        assert data[0]['name'] == 'test1'
 
-    def test_BackendApi_CreatePolygonWithGeom(self):
+    def test_api_create_polygon_with_geom(self):
         backendApi = BackendApi(connectionString)
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'geom': sgPolygon(self.sgPolygonPoints).wkt}))
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
-        assert(data[0]['geom'] == sgPolygon(self.sgPolygonPoints).wkt)
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+        assert data[0]['geom'] == sgPolygon(self.sgPolygonPoints).wkt
 
-    def test_BackendApi_updatePolygonWithGeom(self):
+    def test_api_update_polygon_with_geom(self):
         backendApi = BackendApi(connectionString)
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
-        assert(data[0]['geom'] is None)
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+        assert data[0]['geom'] is None
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'id': 1, 'geom': sgPolygon(self.sgPolygonPoints).wkt}))
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
-        assert(data[0]['geom'] == sgPolygon(self.sgPolygonPoints).wkt)
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+        assert data[0]['geom'] == sgPolygon(self.sgPolygonPoints).wkt
 
-    def test_BackendApi_deletePolygon(self):
+    def test_api_delete_polygon(self):
+        backendApi = BackendApi(connectionString)
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        assert status == Status.Created, f'Status: {status}'
+        data = json.loads(backendApi.getPolygons())
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+        assert data[0]['id'] == 1
+        status = backendApi.deletePolygon(json.dumps({'id': 1}))
+        assert status == Status.Deleted, f'Status: {status}'
+        data = json.loads(backendApi.getPolygons())
+        assert len(data) == 0
+
+    def test_api_get_polygons(self):
         backendApi = BackendApi(connectionString)
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
         data = json.loads(backendApi.getPolygons())
-        print(data)
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
-        assert(data[0]['id'] == 1)
-        backendApi.deletePolygon(json.dumps({'id': 1}))
-        data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 0)
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
 
-    def test_BackendApi_getPolygons(self):
+    def test_api_delete_all_polygons_one(self):
         backendApi = BackendApi(connectionString)
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
+        assert status == Status.Created, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        assert(data[0]['name'] == 'test0')
+        assert len(data) == 1
+        status = backendApi.deleteAllPolygons()
+        assert status == Status.Deleted, f'Status: {status}'
+        data = json.loads(backendApi.getPolygons())
+        assert len(data) == 0
 
-    def test_BackendApi_deleteAllPolygons(self):
-        backendApi = BackendApi(connectionString)
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
-        data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 1)
-        backendApi.deleteAllPolygons()
-        data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 0)
-
-    def test_BackendApi_deleteAllPolygons_several(self):
+    def test_api_delete_all_polygons_several(self):
         backendApi = BackendApi(connectionString)
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test1'}))
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 2)
-        backendApi.deleteAllPolygons()
+        assert len(data) == 2
+        status = backendApi.deleteAllPolygons()
+        assert status == Status.Deleted
         data = json.loads(backendApi.getPolygons())
-        assert(len(data) == 0)
+        assert len(data) == 0
