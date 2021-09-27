@@ -49,5 +49,7 @@ jobs:
       - run: conda list
       - run: conda info
 
+      - run: conda-recipe/build.sh
+
       - name: Nosetests
         run : nosetests -vv
