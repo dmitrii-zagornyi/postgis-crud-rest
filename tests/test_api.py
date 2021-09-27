@@ -110,6 +110,14 @@ class test_api():
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
 
+    def test_api_get_polygons_srid(self):
+        # ToDo: need more clear understanding difference between srid's for better coverage
+        backendApi = BackendApi(connectionString)
+        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'geom': sgPolygon(self.sgPolygonPoints).wkt}))
+        data = json.loads(backendApi.getPolygons(json.dumps({'srid': 32644})))
+        assert len(data) == 1
+        assert data[0]['name'] == 'test0'
+
     def test_api_delete_all_polygons_one(self):
         backendApi = BackendApi(connectionString)
         status = backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))

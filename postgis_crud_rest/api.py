@@ -79,6 +79,4 @@ class Api(metaclass=Singleton):
     def deleteAllPolygons(self):
         with self._session.begin() as session:
             session.query(Polygon).delete()
-        print('DEBUG' * 30)
-        print(Status.Deleted)
         return Status.Deleted
