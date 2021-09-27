@@ -2,7 +2,7 @@ import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from backend.polygon import Polygon
+from postgis_crud_rest.polygon import Polygon
 
 
 class Singleton(type):

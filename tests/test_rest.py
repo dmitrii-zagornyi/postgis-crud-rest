@@ -4,10 +4,12 @@ import subprocess
 import time
 import requests
 
+import postgis_crud_rest
+
 
 class test_rest():
     def setup(self):
-        self.flaskServer = subprocess.Popen(['python', 'rest.py'])
+        self.flaskServer = subprocess.Popen(['python', os.path.join(os.path.dirname(postgis_crud_rest.__file__), 'rest.py')])
         time.sleep(2)
 
     def teardown(self):

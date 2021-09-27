@@ -4,9 +4,9 @@ from nose.tools import assert_equals, nottest
 from shapely.geometry import Polygon as sgPolygon
 from sqlalchemy.ext.declarative import declarative_base
 
-from backend.api import Api as BackendApi
-from backend.api import Singleton
-from backend.polygon import Polygon
+from postgis_crud_rest.api import Api as BackendApi
+from postgis_crud_rest.api import Singleton
+from postgis_crud_rest.polygon import Polygon
 
 
 connectionString = os.environ.get('postgresql')
