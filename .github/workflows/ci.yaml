@@ -48,8 +48,9 @@ jobs:
 
       - run: conda list
       - run: conda info
-      - run: chmod +x conda-recipe/build.sh
-      - run: conda-recipe/build.sh
+
+      - name: Install package
+        run: python setup.py build --force install --old-and-unmanageable
 
       - name: Nosetests
         run : nosetests -vv
