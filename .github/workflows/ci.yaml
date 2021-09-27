@@ -49,7 +49,7 @@ jobs:
       - run: conda list
       - run: conda info
 
-      - name: Install package
+      - name: Install postgis-crud-rest package
         run: python setup.py build --force install --old-and-unmanageable
 
       - name: Nosetests
