@@ -44,7 +44,7 @@ jobs:
           activate-environment: ""
 
       - name: Install conda packages
-        run: conda install -y -c conda-forge flask-restful geoalchemy2 nose psycopg2 pyproj shapely sqlalchemy
+        run: conda install -y -c conda-forge coverage flask-restful geoalchemy2 nose psycopg2 pyproj shapely sqlalchemy
 
       - run: conda list
       - run: conda info
@@ -53,4 +53,4 @@ jobs:
         run: python setup.py build --force install --old-and-unmanageable
 
       - name: Nosetests
-        run : nosetests -vv
+        run : nosetests -v --with-coverage --cover-package=postgis_crud_rest
