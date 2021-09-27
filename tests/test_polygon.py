@@ -11,25 +11,30 @@ class test_polygon():
         data = {}
         polygon = Polygon(data)
         assert polygon is not None
+        return
 
     def test_creation_simple(self):
         data = {'name': 'test'}
         polygon = Polygon(data)
         assert polygon is not None
+        return
 
     def test_creation_with_geom(self):
         data = {'name': 'test', 'geom': sgPolygon(self.sgPolygonPoints).wkt}
         polygon = Polygon(data)
         assert polygon is not None
+        return
 
     def test_creation_with_geom_srid(self):
         data = {'name': 'test', 'geom': sgPolygon(self.sgPolygonPoints).wkt}
         polygon = Polygon(data, srid=4326)
         assert polygon is not None
+        return
 
     def test_creation_with_srid_without_geom(self):
         data = {'name': 'test'}
         polygon = Polygon(data, srid=4326)
+        return
 
     def test_read(self):
         data = {'name': 'test'}
@@ -38,6 +43,7 @@ class test_polygon():
 
         for key in data.keys():
             assert data[key] == readData[key]
+        return
 
     def test_read_geom(self):
         data = {'name': 'test', 'geom': sgPolygon(self.sgPolygonPoints).wkt}
@@ -46,6 +52,7 @@ class test_polygon():
 
         for key in data.keys():
             assert data[key] == readData[key]
+        return
 
     def test_read_geom_srid(self):
         data = {'name': 'test', 'geom': sgPolygon(self.sgPolygonPoints).wkt}
@@ -54,6 +61,7 @@ class test_polygon():
 
         for key in data.keys():
             assert data[key] == readData[key]
+        return
 
     def test_read_srid_without_geom(self):
         data = {'name': 'test'}
@@ -62,6 +70,7 @@ class test_polygon():
 
         for key in data.keys():
             assert data[key] == readData[key]
+        return
 
     def test_update(self):
         data_first = {'name': 'test', 'geom': sgPolygon(self.sgPolygonPoints).wkt}
@@ -74,3 +83,4 @@ class test_polygon():
         data.update(data_second)
         for key in data.keys():
             assert data[key] == readData[key]
+        return

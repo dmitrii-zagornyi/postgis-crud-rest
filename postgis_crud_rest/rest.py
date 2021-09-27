@@ -5,19 +5,22 @@ import json
 import sys
 
 from postgis_crud_rest.api import Api as BackendApi
+from postgis_crud_rest.api import Status
 
 
 app = Flask(__name__)
 api = Api(app)
 
 
-@app.route('/api/create_or_update_polygon', methods=['POST'])
+@app.route('/api/create_polygon', methods=['POST'])
 def createPolygon():
     if request.form:
         try:
-            backendApi.createOrUpdatePolygon(json.dumps(request.form))
-
-            response = make_response(jsonify({'status': 'Created'}), 201)
+            status = backendApi.createOrUpdatePolygon(json.dumps(request.form))
+            if status == Status.Created:
+                response = make_response(jsonify({'status': 'Created'}), 201)
+            else:
+                response = make_response(jsonify({'error': 'Bad Request'}), 400)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
     else:
@@ -35,12 +38,28 @@ def deletePolygon(id):
     return response
 
 
+@app.route('/api/delete_polygons', methods=['DELETE'])
+def deletePolygons():
+    try:
+        status = backendApi.deleteAllPolygons()
+        if status == Status.Deleted:
+            response = make_response(jsonify({'status': 'Deleted'}), 200)
+        else:
+            response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
+    except Exception as e:
+        response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
+    return response
+
+
 @app.route('/api/update_polygon', methods=['POST'])
 def updatePolygon():
     if request.form:
         try:
-            backendApi.createOrUpdatePolygon(json.dumps(request.form))
-            response = make_response(jsonify({'status': 'Updated'}), 201)
+            status = backendApi.createOrUpdatePolygon(json.dumps(request.form))
+            if status == Status.Updated:
+                response = make_response(jsonify({'status': 'Updated'}), 201)
+            else:
+                response = make_response(jsonify({'error': 'Bad Request'}), 400)
         except Exception as e:
             response = make_response(jsonify({'error': 'Internal Server Error'}), 500)
     else:

@@ -23,16 +23,19 @@ class test_api():
         backendApi.deleteAllPolygons()
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 0
+        return
 
     def teardown(self):
         backendApi = BackendApi(connectionString)
         Polygon.__table__.drop(backendApi._engine)  # Need for reset id counter
         del backendApi
         Singleton._instances.clear()
+        return
 
     def test_api_init(self):
         backendApi = BackendApi(connectionString)
         print(backendApi.getPolygons())
+        return
 
     def test_api_create_one_polygon(self):
         backendApi = BackendApi(connectionString)
@@ -41,6 +44,7 @@ class test_api():
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
+        return
 
     def test_api_create_two_polygons(self):
         backendApi = BackendApi(connectionString)
@@ -55,6 +59,7 @@ class test_api():
         assert len(data) == 2
         assert data[0]['name'] == 'test0'
         assert data[1]['name'] == 'test1'
+        return
 
     def test_api_update_polygon(self):
         backendApi = BackendApi(connectionString)
@@ -68,6 +73,7 @@ class test_api():
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 1
         assert data[0]['name'] == 'test1'
+        return
 
     def test_api_create_polygon_with_geom(self):
         backendApi = BackendApi(connectionString)
@@ -76,6 +82,7 @@ class test_api():
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
         assert data[0]['geom'] == sgPolygon(self.sgPolygonPoints).wkt
+        return
 
     def test_api_update_polygon_with_geom(self):
         backendApi = BackendApi(connectionString)
@@ -84,11 +91,15 @@ class test_api():
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
         assert data[0]['geom'] is None
-        backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'id': 1, 'geom': sgPolygon(self.sgPolygonPoints).wkt}))
+        backendApi.createOrUpdatePolygon(json.dumps({
+            'name': 'test0',
+            'id': 1,
+            'geom': sgPolygon(self.sgPolygonPoints).wkt}))
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
         assert data[0]['geom'] == sgPolygon(self.sgPolygonPoints).wkt
+        return
 
     def test_api_delete_polygon(self):
         backendApi = BackendApi(connectionString)
@@ -102,6 +113,7 @@ class test_api():
         assert status == Status.Deleted, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 0
+        return
 
     def test_api_get_polygons(self):
         backendApi = BackendApi(connectionString)
@@ -109,6 +121,7 @@ class test_api():
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
+        return
 
     def test_api_get_polygons_srid(self):
         # ToDo: need more clear understanding difference between srid's for better coverage
@@ -117,6 +130,7 @@ class test_api():
         data = json.loads(backendApi.getPolygons(json.dumps({'srid': 32644})))
         assert len(data) == 1
         assert data[0]['name'] == 'test0'
+        return
 
     def test_api_delete_all_polygons_one(self):
         backendApi = BackendApi(connectionString)
@@ -128,6 +142,7 @@ class test_api():
         assert status == Status.Deleted, f'Status: {status}'
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 0
+        return
 
     def test_api_delete_all_polygons_several(self):
         backendApi = BackendApi(connectionString)
@@ -139,3 +154,4 @@ class test_api():
         assert status == Status.Deleted
         data = json.loads(backendApi.getPolygons())
         assert len(data) == 0
+        return
