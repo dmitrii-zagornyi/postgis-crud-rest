@@ -66,7 +66,7 @@ jobs:
           use-mypy: false
           use-isort: false
           extra-pylint-options: ""
-          extra-pycodestyle-options: "--max-line-length=90"
+          extra-pycodestyle-options: "--max-line-length=120"
           extra-flake8-options: ""
           extra-black-options: ""
           extra-mypy-options: ""

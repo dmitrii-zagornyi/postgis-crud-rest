@@ -7,3 +7,9 @@ Implemented features:
 
 Continous Integration:
 As a CI is used Github Actions (https://github.com/dmitrii-zagornyi/postgis-crud-rest/actions). Builds are triggered on commits and PRs to develop branch. For DB testing stared docker container with PostGIS database. Python environment with required packages created by miniconda. Test coverage not 100% of cases - this required more additional time. For REST API testing is started web service in separate process and is used python requests module. Flask have support of unittests, but this implementation require additional time for Flask investigation.
+
+Update:
+1. Created python package
+2. Significant increase code test coverage
+3. Added code test coverage metric and pycodestyle into CI
+
