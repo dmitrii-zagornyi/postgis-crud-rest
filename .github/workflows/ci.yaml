@@ -56,6 +56,7 @@ jobs:
         run : nosetests -v --with-coverage --cover-package=postgis_crud_rest
 
       - uses: ricardochaves/python-lint@v1.4.0
+        name: pycodestyle
         with:
           python-root-list: "postgis_crud_rest"
           use-pylint: false
@@ -65,7 +66,7 @@ jobs:
           use-mypy: false
           use-isort: false
           extra-pylint-options: ""
-          extra-pycodestyle-options: "--max-line-length=120"
+          extra-pycodestyle-options: "--max-line-length=90"
           extra-flake8-options: ""
           extra-black-options: ""
           extra-mypy-options: ""
