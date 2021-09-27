@@ -19,12 +19,13 @@ class test_api():
 
     def setup(self):
         backendApi = BackendApi(connectionString)
+        backendApi.deleteAllPolygons()
         data = json.loads(backendApi.getPolygons())
         assert(len(data) == 0)
 
     def teardown(self):
         backendApi = BackendApi(connectionString)
-        Polygon.__table__.drop(backendApi._engine)
+        Polygon.__table__.drop(backendApi._engine)  # Need for reset id counter
         del backendApi
         Singleton._instances.clear()
 
@@ -76,7 +77,7 @@ class test_api():
         data = json.loads(backendApi.getPolygons())
         assert(len(data) == 1)
         assert(data[0]['name'] == 'test0')
-        assert(data[0]['geom'] == 'None')
+        assert(data[0]['geom'] is None)
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0', 'id': 1, 'geom': sgPolygon(self.sgPolygonPoints).wkt}))
         data = json.loads(backendApi.getPolygons())
         assert(len(data) == 1)
@@ -87,9 +88,10 @@ class test_api():
         backendApi = BackendApi(connectionString)
         backendApi.createOrUpdatePolygon(json.dumps({'name': 'test0'}))
         data = json.loads(backendApi.getPolygons())
+        print(data)
         assert(len(data) == 1)
         assert(data[0]['name'] == 'test0')
-        assert(data[0]['id'] == '1')
+        assert(data[0]['id'] == 1)
         backendApi.deletePolygon(json.dumps({'id': 1}))
         data = json.loads(backendApi.getPolygons())
         assert(len(data) == 0)
