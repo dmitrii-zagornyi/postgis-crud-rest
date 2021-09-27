@@ -49,8 +49,11 @@ class Polygon(Base):
                     myCrs = pyproj.CRS(f'EPSG:{srid}')
                     project = pyproj.Transformer.from_crs(dbCrs, myCrs, always_xy=True).transform
                     value = transform(project, value)
-                value = to_shape(value)
-        return str(value)
+                value = str(to_shape(value))
+            elif key == '_created' or key == '_update':
+                value = str(value)
+
+        return value
 
     def _setItem(self, key, value, srid):
         assert key is not None

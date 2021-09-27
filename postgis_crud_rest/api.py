@@ -1,8 +1,15 @@
 import json
+from enum import Enum
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from postgis_crud_rest.polygon import Polygon
+
+
+class Status(Enum):
+    Created = 1
+    Updated = 2
+    Deleted = 3
 
 
 class Singleton(type):
@@ -14,9 +21,6 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-connectionString = "postgresql://postgres:qazwsx@localhost:5432/postgres"
-
-
 class Api(metaclass=Singleton):
     def __init__(self, connectionString):
         self._engine = create_engine(connectionString, echo=True)
@@ -24,7 +28,7 @@ class Api(metaclass=Singleton):
         Polygon.__table__.create(bind=self._engine, checkfirst=True)
         return
 
-    def jsonToData(jsonData):
+    def _jsonToData(jsonData):
         data = json.loads(jsonData)
         if 'srid' in data:
             srid = data.pop('srid', None)
@@ -32,35 +36,36 @@ class Api(metaclass=Singleton):
             srid = Polygon.getSrid()
         return data, srid
 
-    def createPolygon(self, jsonData):
-        data, srid = Api.jsonToData(jsonData)
+    def createOrUpdatePolygon(self, jsonData):
+        data, srid = Api._jsonToData(jsonData)
 
         with self._session.begin() as session:
-            polygon = Polygon(data, srid)
-            session.add(polygon)
-        return
+            polygon = None
+            if 'id' in data:
+                polygon = session.query(Polygon).filter_by(id=data['id']).first()
 
-    def updatePolygon(self, jsonData):
-        data, srid = Api.jsonToData(jsonData)
-        assert 'id' in data
+            if polygon is None:
+                polygon = Polygon(data, srid)
+                session.add(polygon)
+                status = Status.Created
+            else:
+                polygon.update(data, srid)
+                status = Status.Updated
 
-        with self._session.begin() as session:
-            polygon = session.query(Polygon).filter_by(id=data['id']).first()
-            polygon.update(data, srid)
-        return
+        return status
 
     def deletePolygon(self, jsonData):
-        data, _ = Api.jsonToData(jsonData)
+        data, _ = Api._jsonToData(jsonData)
         assert 'id' in data
 
         with self._session.begin() as session:
             polygon = session.query(Polygon).filter_by(id=data['id']).first()
             session.delete(polygon)
-        return
+        return Status.Deleted
 
     def getPolygons(self, jsonData=None):
         if jsonData is not None:
-            _, srid = Api.jsonToData(jsonData)
+            _, srid = Api._jsonToData(jsonData)
         else:
             srid = Polygon.getSrid()
 
@@ -70,3 +75,8 @@ class Api(metaclass=Singleton):
                 polygonsData.append(polygon.read(srid))
 
         return json.dumps(polygonsData)
+
+    def deleteAllPolygons(self):
+        with self._session.begin() as session:
+            session.query(Polygon).delete()
+        return Status.Deleted
